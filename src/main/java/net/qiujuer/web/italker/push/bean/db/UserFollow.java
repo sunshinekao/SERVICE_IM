@@ -2,67 +2,73 @@ package net.qiujuer.web.italker.push.bean.db;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
- * 用户关系Model
+ * 用户关系的Model，
+ * 用于用户直接进行好友关系的实现
+ *
+ * @author qiujuer Email:qiujuer@live.cn
+ * @version 1.0.0
  */
 @Entity
-@Table(name="User_Follow")
+@Table(name = "TB_USER_FOLLOW")
 public class UserFollow {
+
     @Id
     @PrimaryKeyJoinColumn
-    //主键生成存储的类型为UUID
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name="uuid",strategy = "uuid2")
-    @Column(updatable = false,nullable = false)
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(updatable = false, nullable = false)
     private String id;
 
-    //发起人，水友
-    @ManyToOne(optional = false)//不可选必修有这个字段
+
+    // 定义一个发起人，你关注某人，这里就是你
+    // 多对1 -> 你可以关注很多人，你的每一次关注都是一条记录
+    // 你可以创建很多个关注的信息，所有是多对1；
+    // 这里的多对一是：User 对应 多个UserFollow
+    // optional 不可选，必须存储，一条关注记录一定要有一个"你"
+    @ManyToOne(optional = false)
+    // 定义关联的表字段名为originId，对应的是User.id
+    // 定义的是数据库中的存储字段
     @JoinColumn(name = "originId")
     private User origin;
-    @Column(nullable = false,insertable = false,updatable = false)
+    // 把这个列提取到我们的Model中，不允许为null，不允许更新，插入
+    @Column(nullable = false, updatable = false, insertable = false)
     private String originId;
 
-    //目标，UP主
-    @ManyToOne(optional = false)//不可选必修有这个字段
+
+    // 定义关注的目标，你关注的人
+    // 也是多对1，你可以被很多人关注，每次一关注都是一条记录
+    // 所有就是 多个UserFollow 对应 一个 User 的情况
+    @ManyToOne(optional = false)
+    // 定义关联的表字段名为targetId，对应的是User.id
+    // 定义的是数据库中的存储字段
     @JoinColumn(name = "targetId")
     private User target;
-    @Column(nullable = false,insertable = false,updatable = false)
+    // 把这个列提取到我们的Model中，不允许为null，不允许更新，插入
+    @Column(nullable = false, updatable = false, insertable = false)
     private String targetId;
 
-    //别名
+
+    // 别名，也就是对target的备注名, 可以为null
     @Column
     private String alias;
 
-    //创建时间
+
+    // 定义为创建时间戳，在创建时就已经写入
     @CreationTimestamp
     @Column(nullable = false)
-    private LocalDateTime createAt=LocalDateTime.now ();
+    private LocalDateTime createAt = LocalDateTime.now();
 
-    //更新时间
-    @CreationTimestamp
+    // 定义为更新时间戳，在创建时就已经写入
+    @UpdateTimestamp
     @Column(nullable = false)
-    private LocalDateTime updataAt=LocalDateTime.now ();
+    private LocalDateTime updateAt = LocalDateTime.now();
 
-    //获取我关注的人列表
-    @JoinColumn( name = "originId")
-    @LazyCollection (LazyCollectionOption.EXTRA)
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private Set<UserFollow> following =new HashSet<> ();
-
-    //获取关注我的人列表
-    @JoinColumn( name = "targetId")
-    @LazyCollection (LazyCollectionOption.EXTRA)
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private Set<UserFollow> follower =new HashSet<> ();
 
     public String getId() {
         return id;
@@ -120,11 +126,11 @@ public class UserFollow {
         this.createAt = createAt;
     }
 
-    public LocalDateTime getUpdataAt() {
-        return updataAt;
+    public LocalDateTime getUpdateAt() {
+        return updateAt;
     }
 
-    public void setUpdataAt(LocalDateTime updataAt) {
-        this.updataAt = updataAt;
+    public void setUpdateAt(LocalDateTime updateAt) {
+        this.updateAt = updateAt;
     }
 }
