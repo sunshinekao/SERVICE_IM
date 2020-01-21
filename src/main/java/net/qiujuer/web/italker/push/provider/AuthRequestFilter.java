@@ -17,7 +17,7 @@ import java.security.Principal;
 /**
  * 用于所有的请求的接口的过滤和拦截ø
  *
- * @author qiujuer Email:qiujuer@live.cn
+ * @author sunhaobin
  * @version 1.0.0
  */
 @Provider

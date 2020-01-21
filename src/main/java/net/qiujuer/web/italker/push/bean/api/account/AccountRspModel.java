@@ -7,7 +7,7 @@ import net.qiujuer.web.italker.push.bean.db.User;
 /**
  * 账户部分返回的Model
  *
- * @author qiujuer Email:qiujuer@live.cn
+ * @author sunhaobin
  * @version 1.0.0
  */
 public class AccountRspModel {

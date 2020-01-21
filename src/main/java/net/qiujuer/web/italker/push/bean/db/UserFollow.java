@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * 用户关系的Model，
  * 用于用户直接进行好友关系的实现
  *
- * @author qiujuer Email:qiujuer@live.cn
+ * @author sunhaobin
  * @version 1.0.0
  */
 @Entity

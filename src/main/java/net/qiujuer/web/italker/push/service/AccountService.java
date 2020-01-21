@@ -47,11 +47,6 @@ public class AccountService extends BaseService {
         }
     }
 
-    @GET
-    @Path ("/www")
-    public String login(){
-        return "aaaaaa";
-    }
     // 注册
     @POST
     @Path("/register")

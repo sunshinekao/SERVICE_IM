@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * 用户的Model，对应数据库
  *
- * @author qiujuer Email:qiujuer@live.cn
+ * @author sunhaobin
  * @version 1.0.0
  */
 @Entity

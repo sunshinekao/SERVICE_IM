@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import com.google.gson.annotations.Expose;
 
 /**
- * @author qiujuer Email:qiujuer@live.cn
+ * @author sunhaobin
  * @version 1.0.0
  */
 public class RegisterModel {
