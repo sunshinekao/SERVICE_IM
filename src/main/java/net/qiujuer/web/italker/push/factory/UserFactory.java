@@ -223,7 +223,7 @@ public class UserFactory {
             session.load (self,self.getId ());
             Set<UserFollow> flows=self.getFollowers ();
             return flows.stream ()
-                    .map (UserFollow::getTarget)
+                    .map (UserFollow::getOrigin)
                     .collect(Collectors.toList());
         });
     }
