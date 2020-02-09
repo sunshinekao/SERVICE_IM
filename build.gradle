@@ -22,6 +22,10 @@ sourceCompatibility = 1.8
 
 repositories {
     maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/'}
+    maven{
+        name "getui-nexus"
+        url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"
+    }
 }
 
 dependencies {
@@ -47,5 +51,6 @@ dependencies {
 
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.47'
 
+    compile 'com.gexin.platform:gexin-rp-sdk-http:4.0.1.7'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
