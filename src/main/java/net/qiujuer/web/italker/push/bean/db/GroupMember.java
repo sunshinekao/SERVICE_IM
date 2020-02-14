@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * @author sunhaobin
+ * @author qiujuer Email:qiujuer@live.cn
  * @version 1.0.0
  */
 @Entity
@@ -68,6 +68,14 @@ public class GroupMember {
     @Column(nullable = false, updatable = false, insertable = false)
     private String groupId;
 
+    public GroupMember() {
+
+    }
+
+    public GroupMember(User user, Group group) {
+        this.user = user;
+        this.group = group;
+    }
 
     public String getId() {
         return id;
