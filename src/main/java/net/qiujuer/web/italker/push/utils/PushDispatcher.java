@@ -2,10 +2,13 @@ package net.qiujuer.web.italker.push.utils;
 
 import com.gexin.rp.sdk.base.IBatch;
 import com.gexin.rp.sdk.base.IPushResult;
+import com.gexin.rp.sdk.base.IQueryResult;
 import com.gexin.rp.sdk.base.impl.SingleMessage;
 import com.gexin.rp.sdk.base.impl.Target;
 import com.gexin.rp.sdk.http.IGtPush;
+import com.gexin.rp.sdk.template.NotificationTemplate;
 import com.gexin.rp.sdk.template.TransmissionTemplate;
+import com.gexin.rp.sdk.template.style.Style0;
 import com.google.common.base.Strings;
 import net.qiujuer.web.italker.push.bean.api.base.PushModel;
 import net.qiujuer.web.italker.push.bean.db.User;
@@ -53,6 +56,12 @@ public class PushDispatcher {
         // 构建一个目标+内容
         BatchBean bean = buildMessage(receiver.getPushId(), pushString);
         beans.add(bean);
+
+        //判断当前是否在线，不在线推送一个通知栏消息
+        if(!isUserOnline(receiver.getPushId())){
+            BatchBean batchBean = buildNotification(receiver.getPushId(), pushString);
+            beans.add(batchBean);
+        }
         return true;
     }
 
@@ -80,17 +89,36 @@ public class PushDispatcher {
         Target target = new Target();
         target.setAppId(appId);
         target.setClientId(clientId);
-
         // 返回一个封装
         return new BatchBean(message, target);
     }
 
+    /**
+     * 构建一个统治栏消息
+     *
+     * @param clientId 接收者的设备Id
+     * @param text     要接收的数据
+     * @return BatchBean
+     */
+    private BatchBean buildNotification(String clientId, String text) {
+
+        NotificationTemplate notificationTemplate = notificationTemplateDemo();
+
+        SingleMessage message = new SingleMessage();
+        message.setData(notificationTemplate);
+
+        // 设置推送目标，填入appid和clientId
+        Target target = new Target();
+        target.setAppId(appId);
+        target.setClientId(clientId);
+        // 返回一个封装
+        return new BatchBean(message, target);
+    }
 
     // 进行消息最终发送
     public boolean submit() {
         // 构建打包的工具类
         IBatch batch = pusher.getBatch();
-
         // 是否有数据需要发送
         boolean haveData = false;
 
@@ -139,7 +167,6 @@ public class PushDispatcher {
 
     }
 
-
     // 给每个人发送消息的一个Bean封装
     private static class BatchBean {
         SingleMessage message;
@@ -149,5 +176,44 @@ public class PushDispatcher {
             this.message = message;
             this.target = target;
         }
+    }
+
+    /**
+     * 获取用户在线状态
+     * @param clientId 客户端身份ID
+     * @return 用户状态
+     */
+    private Boolean  isUserOnline(String clientId){
+        String status=(String)pusher.getClientIdStatus(appId,clientId).getResponse().get("result");
+        if(status=="online"){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    public static NotificationTemplate notificationTemplateDemo() {
+        NotificationTemplate template = new NotificationTemplate();
+        template.setAppId(appId);
+        template.setAppkey(appId);
+        template.setTransmissionType(1);
+        template.setTransmissionContent("请输入您要透传的内容");
+
+        Style0 style = new Style0();
+        // 设置通知栏标题与内容
+        style.setTitle("请输入通知栏标题");
+        style.setText("请输入通知栏内容");
+        // 配置通知栏图标
+        style.setLogo("icon.png");
+        // 配置通知栏网络图标
+        style.setLogoUrl("");
+        // 设置通知是否响铃，震动，或者可清除
+        style.setRing(true);
+        style.setVibrate(true);
+        style.setClearable(true);
+//        style.setChannel("自定义channel");
+//        style.setChannelName("自定义channelName");
+//        style.setChannelLevel(3);
+        template.setStyle(style);
+        return template;
     }
 }
