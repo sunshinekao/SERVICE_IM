@@ -267,6 +267,31 @@ public class UserFactory {
             return target;
         });
     }
+
+    /**
+     * 删除人的操作
+     *
+     * @param origin 发起者
+     * @param target 被关注的人
+     * @return 被关注的人的信息
+     */
+    public static User remove(final User origin, final User target) {
+        UserFollow follow1 = getUserFollow(origin, target);
+        UserFollow follow2 = getUserFollow(target, origin);
+        if (follow1 == null||follow2==null) {
+            // 未关注，直接返回
+            return null;
+        }
+
+        return Hib.query(session -> {
+            // 想要操作懒加载的数据，需要重新load一次
+            session.load(target, target.getId());
+            session.remove (follow1);
+            session.remove (follow2);
+            return target;
+        });
+    }
+
     /**
      * 查询两个人是否已经关注
      *

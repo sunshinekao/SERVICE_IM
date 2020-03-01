@@ -57,11 +57,11 @@ public class PushDispatcher {
         BatchBean bean = buildMessage(receiver.getPushId(), pushString);
         beans.add(bean);
 
-        //判断当前是否在线，不在线推送一个通知栏消息
-        if(!isUserOnline(receiver.getPushId())){
-            BatchBean batchBean = buildNotification(receiver.getPushId(), pushString);
-            beans.add(batchBean);
-        }
+//        //判断当前是否在线，不在线推送一个通知栏消息
+//        if(!isUserOnline(receiver.getPushId())){
+//            BatchBean batchBean = buildNotification(receiver.getPushId(), pushString);
+//            beans.add(batchBean);
+//        }
         return true;
     }
 

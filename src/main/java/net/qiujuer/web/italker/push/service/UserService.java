@@ -98,7 +98,41 @@ public class UserService extends BaseService {
         // 返回关注的人的信息
         return ResponseModel.buildOk(new UserCard(followUser, true));
     }
+    // 删除人，
+    @PUT // 修改类使用Put
+    @Path("/remove/{followId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public ResponseModel<UserCard> remove(@PathParam("followId") String removeId) {
+        User self = getSelf();
 
+        // 不能删除我自己
+        if (self.getId().equalsIgnoreCase(removeId)
+                || Strings.isNullOrEmpty(removeId)) {
+            // 返回参数异常
+            return ResponseModel.buildParameterError();
+        }
+
+
+        // 找到需要删除的人
+        User removeUser = UserFactory.findById(removeId);
+        if (removeUser == null) {
+            // 未找到人
+            return ResponseModel.buildNotFoundUserError(null);
+        }
+
+        // 备注默认没有，后面可以扩展
+        removeUser = UserFactory.remove(self, removeUser);
+        if (removeUser == null) {
+            // 删除失败，返回服务器异常
+            return ResponseModel.buildServiceError();
+        }
+
+        PushFactory.pushRemove (removeUser,new UserCard (self));
+
+        // 返回关注的人的信息
+        return ResponseModel.buildOk(new UserCard(removeUser, false));
+    }
     // 获取某人的信息
     @GET
     @Path("{id}") // http://127.0.0.1/api/user/{id}

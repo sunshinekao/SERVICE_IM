@@ -63,6 +63,10 @@ public class MessageService extends BaseService {
             return ResponseModel.buildCreateError(ResponseModel.ERROR_CREATE_MESSAGE);
         }
 
+        if(UserFactory.getUserFollow (receiver,getSelf ())==null){
+            return ResponseModel.buildCreateError(ResponseModel.ERROR_CREATE_MESSAGE);
+        }
+
         // 存储数据库
         Message message = MessageFactory.add(sender, receiver, model);
 

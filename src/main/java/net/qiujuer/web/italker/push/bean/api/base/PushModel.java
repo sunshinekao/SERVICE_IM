@@ -18,7 +18,11 @@ import java.util.List;
 public class PushModel {
     public static final int ENTITY_TYPE_LOGOUT = -1;
     public static final int ENTITY_TYPE_MESSAGE = 200;
+
     public static final int ENTITY_TYPE_ADD_FRIEND = 1001;
+    // 删除朋友
+    public static final int ENTITY_TYPE_REMOVE_FRIEND = 1101;
+
     public static final int ENTITY_TYPE_ADD_GROUP = 1002;
     public static final int ENTITY_TYPE_ADD_GROUP_MEMBERS = 1003;
     public static final int ENTITY_TYPE_MODIFY_GROUP_MEMBERS = 2001;

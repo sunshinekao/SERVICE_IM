@@ -14,15 +14,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Path("/subject")
 public class SubjectService extends BaseService{
     @GET
-    @Path("/subject")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public ResponseModel<List<Subject>> subject(){
+    public ResponseModel<String> subject(){
+
         //拿到列表
-        List<Subject> subjects= SubjectFactory.subject();
+        String  subjects= SubjectFactory.subject();
         return ResponseModel.buildOk(subjects);
     }
 }

@@ -20,6 +20,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -97,6 +98,7 @@ public class GroupService extends BaseService {
 
         // 开始发起推送
         PushFactory.pushJoinGroup(members);
+        //fixme 推送群成员信息？？？
 
         return ResponseModel.buildOk(new GroupCard(creatorMember));
     }
@@ -287,18 +289,22 @@ public class GroupService extends BaseService {
 
         // 进行添加操作
         Set<GroupMember> insertMembers =  GroupFactory.addMembers(group, insertUsers);
-        if(insertMembers==null)
+        Set<GroupMember> memberNew = new HashSet<> ();
+        for (GroupMember member : insertMembers) {
+            memberNew.add (GroupFactory.findGroupMemberId(member.getId ()));
+            }
+        if(memberNew==null)
             return ResponseModel.buildServiceError();
 
 
         // 转换
-        List<GroupMemberCard> insertCards = insertMembers.stream()
+        List<GroupMemberCard> insertCards = memberNew.stream()
                 .map(GroupMemberCard::new)
                 .collect(Collectors.toList());
 
         // 通知，两部曲
         // 1.通知新增的成员，你被加入了XXX群
-        PushFactory.pushJoinGroup(insertMembers);
+        PushFactory.pushJoinGroup(memberNew);
 
         // 2.通知群中老的成员，有XXX，XXX加入群
         PushFactory.pushGroupMemberAdd(oldMembers, insertCards);

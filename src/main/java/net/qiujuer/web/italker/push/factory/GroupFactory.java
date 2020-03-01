@@ -6,6 +6,7 @@ import net.qiujuer.web.italker.push.bean.db.Group;
 import net.qiujuer.web.italker.push.bean.db.GroupMember;
 import net.qiujuer.web.italker.push.bean.db.User;
 import net.qiujuer.web.italker.push.utils.Hib;
+import org.hibernate.query.Query;
 
 import java.util.HashSet;
 import java.util.List;
@@ -129,16 +130,15 @@ public class GroupFactory {
                 session.save(member);
                 members.add(member);
             }
-
-            // 进行数据刷新
-            /*
-            for (GroupMember member : members) {
-                // 进行刷新，会进行关联查询；再循环中消耗较高
-                session.refresh(member);
-            }
-            */
-
+//            Set<GroupMember> memberRe = new HashSet<>();
+//            // 进行数据刷新
+//            for (GroupMember member : members) {
+//                memberRe.add (findGroupMemberId(member.getId ()));
+//            }
             return members;
         });
+    }
+    public static GroupMember findGroupMemberId(String id){
+        return Hib.query(session -> session.get(GroupMember.class, id));
     }
 }
